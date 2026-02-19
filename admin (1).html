@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center">
+
+<!-- LOGIN -->
+<div id="loginBox" class="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+<h2 class="text-2xl font-bold mb-6">🔐 ADMIN LOGIN</h2>
+
+<input type="password" id="password"
+placeholder="Nhập mật khẩu..."
+class="w-full p-3 rounded-lg bg-slate-700 mb-4">
+
+<button onclick="checkPassword()"
+class="w-full bg-emerald-600 hover:bg-emerald-700 p-3 rounded-lg font-bold">
+Đăng nhập
+</button>
+
+<p id="error" class="text-red-400 mt-4 hidden">Sai mật khẩu!</p>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden w-full p-8">
+
+<div class="flex justify-between items-center mb-8">
+<h1 class="text-3xl font-bold">
+📊 ADMIN QUẢN LÝ ĐƠN HÀNG
+</h1>
+
+<button onclick="logout()"
+class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-xl">
+🔓 Đăng xuất
+</button>
+</div>
+
+<!-- THỐNG KÊ -->
+<div class="grid md:grid-cols-2 gap-6 mb-8">
+
+<div class="bg-slate-800 p-6 rounded-2xl shadow-xl text-center">
+<h2 class="text-gray-400 text-sm">TỔNG ĐƠN HÀNG</h2>
+<p id="totalOrders" class="text-3xl font-bold text-emerald-400 mt-2">0</p>
+</div>
+
+<div class="bg-slate-800 p-6 rounded-2xl shadow-xl text-center">
+<h2 class="text-gray-400 text-sm">TỔNG DOANH THU</h2>
+<p id="totalRevenue" class="text-3xl font-bold text-yellow-400 mt-2">0đ</p>
+
+<button onclick="resetRevenue()"
+class="mt-4 bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-xl text-sm">
+🔄 Reset doanh thu
+</button>
+</div>
+
+</div>
+
+<!-- NÚT -->
+<div class="flex justify-between mb-6">
+<button onclick="clearOrders()"
+class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-xl">
+🗑 Xóa toàn bộ đơn
+</button>
+
+<button onclick="loadOrders()"
+class="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-xl">
+🔄 Làm mới
+</button>
+</div>
+
+<!-- BẢNG -->
+<div class="overflow-x-auto bg-slate-800 rounded-2xl shadow-xl">
+<table class="w-full text-center">
+<thead class="bg-slate-700">
+<tr>
+<th class="p-4">Thời gian</th>
+<th class="p-4">Tên</th>
+<th class="p-4">SĐT</th>
+<th class="p-4">Gói</th>
+<th class="p-4">SL</th>
+<th class="p-4">Tổng tiền</th>
+<th class="p-4">Xóa</th>
+</tr>
+</thead>
+<tbody id="orderTable"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+
+// ===== MẬT KHẨU =====
+const ADMIN_PASSWORD = "admin123";
+
+document.addEventListener("keydown", function(e){
+if(e.key === "Enter"){
+checkPassword();
+}
+});
+
+function checkPassword(){
+let pass = document.getElementById("password").value;
+
+if(pass === ADMIN_PASSWORD){
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("adminPanel").classList.remove("hidden");
+document.body.classList.remove("items-center","justify-center");
+loadOrders();
+}else{
+document.getElementById("error").classList.remove("hidden");
+}
+}
+
+function logout(){
+document.getElementById("adminPanel").classList.add("hidden");
+document.getElementById("loginBox").classList.remove("hidden");
+document.body.classList.add("items-center","justify-center");
+document.getElementById("password").value="";
+}
+
+// ===== LOAD ĐƠN =====
+function loadOrders(){
+let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+let revenue = Number(localStorage.getItem("totalRevenueSaved") || 0);
+
+let table = document.getElementById("orderTable");
+let totalOrders = document.getElementById("totalOrders");
+let totalRevenue = document.getElementById("totalRevenue");
+
+table.innerHTML="";
+
+if(orders.length === 0){
+table.innerHTML = `
+<tr>
+<td colspan="7" class="p-6 text-gray-400">
+Chưa có đơn hàng nào
+</td>
+</tr>`;
+}
+
+orders.forEach((order,index)=>{
+table.innerHTML += `
+<tr class="border-t border-slate-700 hover:bg-slate-700/50 transition">
+<td class="p-3">${order.time}</td>
+<td class="p-3">${order.name}</td>
+<td class="p-3">${order.phone}</td>
+<td class="p-3">${order.package}</td>
+<td class="p-3">${order.quantity}</td>
+<td class="p-3 text-emerald-400 font-bold">
+${Number(order.total).toLocaleString()}đ
+</td>
+<td class="p-3">
+<button onclick="deleteOrder(${index})"
+class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg text-sm">
+X
+</button>
+</td>
+</tr>`;
+});
+
+totalOrders.innerText = orders.length;
+totalRevenue.innerText = revenue.toLocaleString() + "đ";
+}
+
+// ===== XÓA 1 ĐƠN (KHÔNG TRỪ DOANH THU) =====
+function deleteOrder(index){
+let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+orders.splice(index,1);
+localStorage.setItem("orders", JSON.stringify(orders));
+loadOrders();
+}
+
+// ===== XÓA TOÀN BỘ ĐƠN (KHÔNG ẢNH HƯỞNG DOANH THU) =====
+function clearOrders(){
+if(confirm("Bạn chắc chắn muốn xóa tất cả đơn hàng?")){
+localStorage.removeItem("orders");
+loadOrders();
+}
+}
+
+// ===== RESET DOANH THU =====
+function resetRevenue(){
+if(confirm("Reset doanh thu về 0?")){
+localStorage.setItem("totalRevenueSaved", 0);
+loadOrders();
+}
+}
+
+</script>
+<script>
+// ===== CHỐNG CHUỘT PHẢI =====
+document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+});
+
+// ===== CHỐNG PHÍM TẮT DEVTOOLS =====
+document.addEventListener("keydown", function(e){
+
+    // F12
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.key === "I") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && e.key === "J") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+    }
+
+    // Ctrl+S (Save page)
+    if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+    }
+
+});
+
+</script>
+</body>
+</html>
+

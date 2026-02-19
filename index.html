@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CapCut Pro Premium</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+margin:0;
+overflow-x:hidden;
+background:#0f172a;
+color:white;
+font-family:sans-serif;
+}
+
+.video-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-2;
+filter:brightness(0.3) blur(2px);
+}
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(17,24,39,0.9));
+z-index:-1;
+}
+
+.glass{
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(12px);
+border:1px solid rgba(255,255,255,0.1);
+}
+
+.fade{
+opacity:0;
+transform:translateY(40px);
+transition: all 0.8s ease;
+}
+
+.fade.show{
+opacity:1;
+transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- VIDEO -->
+<video autoplay muted loop playsinline class="video-bg">
+<source src="https://cdn.coverr.co/videos/coverr-editing-video-1597/1080p.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<!-- HEADER -->
+<section class="text-center py-24 px-6 fade">
+<div class="mb-10">
+<img src="https://i.imgur.com/uqWdh2b.png"
+class="mx-auto w-80 md:w-96 lg:w-[500px] drop-shadow-2xl hover:scale-105 transition duration-500">
+</div>
+
+<p class="text-gray-300 text-lg max-w-2xl mx-auto">
+Mở khóa toàn bộ tính năng chỉnh sửa video cao cấp – Không watermark – Full AI Tools – Xuất 4K
+</p>
+
+<div class="mt-6 text-yellow-400 font-bold text-lg">
+🔥 Ưu đãi kết thúc sau: <span id="countdown"></span>
+</div>
+</section>
+
+<!-- CAM KẾT -->
+<section class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6 mb-20 fade">
+<div class="glass p-6 rounded-2xl text-center">
+🛡 <h3 class="font-bold text-lg mt-2">An Toàn Tuyệt Đối</h3>
+<p class="text-gray-400 mt-2">Không yêu cầu mật khẩu. Bảo mật thông tin 100%.</p>
+</div>
+
+<div class="glass p-6 rounded-2xl text-center">
+⚡ <h3 class="font-bold text-lg mt-2">Kích Hoạt Nhanh</h3>
+<p class="text-gray-400 mt-2">Xử lý trong vài phút sau khi thanh toán.</p>
+</div>
+
+<div class="glass p-6 rounded-2xl text-center">
+💎 <h3 class="font-bold text-lg mt-2">Uy Tín 1000+ Khách</h3>
+<p class="text-gray-400 mt-2">Được đánh giá 5 sao từ khách hàng.</p>
+</div>
+</section>
+
+<!-- REVIEW -->
+<section class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6 mb-20 fade">
+<div class="glass p-6 rounded-2xl">
+⭐ ⭐ ⭐ ⭐ ⭐
+<p class="mt-3 text-gray-300">Kích hoạt nhanh, support tốt.</p>
+<p class="text-sm text-gray-500">— Minh Trí</p>
+</div>
+
+<div class="glass p-6 rounded-2xl">
+⭐ ⭐ ⭐ ⭐ ⭐
+<p class="mt-3 text-gray-300">Dùng ổn định, xuất video không watermark.</p>
+<p class="text-sm text-gray-500">— Lan Anh</p>
+</div>
+
+<div class="glass p-6 rounded-2xl">
+⭐ ⭐ ⭐ ⭐ ⭐
+<p class="mt-3 text-gray-300">Giá hợp lý hơn mua trực tiếp.</p>
+<p class="text-sm text-gray-500">— Huy Hoàng</p>
+</div>
+</section>
+
+<!-- THANH TOÁN -->
+<section class="flex justify-center px-6 mb-24 fade">
+<div class="glass p-8 rounded-3xl shadow-2xl w-full max-w-xl">
+
+<h2 class="text-2xl font-bold text-center mb-6">
+💳 Thanh Toán CapCut Pro
+</h2>
+
+<div class="space-y-4">
+
+<select id="package" class="w-full p-3 rounded-lg bg-slate-800">
+<option value="1 Tháng - 29K" data-price="79000">1 Tháng - 29.000đ</option>
+<option value="6 Tháng - 100K" data-price="199000">6 Tháng - 100.000đ</option>
+<option value="12 Tháng - 299K" data-price="499000">12 Tháng - 299.000đ</option>
+</select>
+
+<!-- THÊM SỐ LƯỢNG -->
+<input type="number" id="quantity" value="1" min="1"
+class="w-full p-3 rounded-lg bg-slate-800"
+placeholder="Số lượng">
+
+<input id="name" placeholder="Họ và tên"
+class="w-full p-3 rounded-lg bg-slate-800">
+
+<input id="phone" placeholder="Số điện thoại / Zalo"
+class="w-full p-3 rounded-lg bg-slate-800">
+
+<button onclick="createOrder()"
+class="w-full bg-emerald-600 hover:bg-emerald-700 p-3 rounded-lg font-bold transition">
+Thanh Toán Ngay
+</button>
+
+</div>
+
+<div id="qrBox" class="hidden mt-8 text-center">
+<h3 class="text-xl font-bold mb-4">📱 Quét QR để thanh toán</h3>
+<img id="qrImage" class="mx-auto rounded-xl shadow-xl mb-4">
+<p id="transferInfo" class="text-gray-300 text-sm"></p>
+</div>
+
+</div>
+</section>
+
+<!-- POPUP -->
+<div id="salePopup"
+class="hidden fixed bottom-6 left-6 bg-black/80 text-white px-6 py-4 rounded-xl shadow-xl backdrop-blur-md">
+🔥 <span id="popupText"></span>
+</div>
+
+<footer class="text-center py-6 text-gray-400 text-sm">
+© 2026 CapCut Pro Activation Service
+</footer>
+
+<script>
+const faders = document.querySelectorAll(".fade");
+const appear = new IntersectionObserver((entries,obs)=>{
+entries.forEach(e=>{
+if(!e.isIntersecting) return;
+e.target.classList.add("show");
+obs.unobserve(e.target);
+});
+},{threshold:0.2});
+faders.forEach(f=>appear.observe(f));
+
+let end = new Date().getTime() + 24*60*60*1000;
+setInterval(()=>{
+let now = new Date().getTime();
+let d = end - now;
+let h = Math.floor((d%(1000*60*60*24))/(1000*60*60));
+let m = Math.floor((d%(1000*60*60))/(1000*60));
+let s = Math.floor((d%(1000*60))/1000);
+document.getElementById("countdown").innerHTML = h+"h "+m+"m "+s+"s";
+},1000);
+
+function createOrder(){
+let pkg = document.getElementById("package");
+let packageName = pkg.value;
+let price = Number(pkg.options[pkg.selectedIndex].dataset.price);
+let name = document.getElementById("name").value;
+let phone = document.getElementById("phone").value;
+let quantity = Number(document.getElementById("quantity").value);
+
+if(!name || !phone){
+alert("Vui lòng nhập đầy đủ thông tin");
+return;
+}
+
+if(quantity < 1){
+alert("Số lượng phải lớn hơn 0");
+return;
+}
+
+let total = price * quantity;
+
+let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+
+orders.push({
+package: packageName,
+name: name,
+phone: phone,
+quantity: quantity,
+price: price,
+total: total,
+time: new Date().toLocaleString()
+});
+
+localStorage.setItem("orders", JSON.stringify(orders));
+// CỘNG DOANH THU TÍCH LŨY
+let oldRevenue = Number(localStorage.getItem("totalRevenueSaved") || 0);
+localStorage.setItem("totalRevenueSaved", oldRevenue + total);
+
+
+generateQR(total, phone);
+alert("Đã tạo đơn thành công!");
+}
+
+function generateQR(amount, phone){
+let bank="970407";
+let account="8888844488";
+let name="NGUYEN DUC DAT";
+let content="CapCutPro_"+phone;
+
+let url=`https://img.vietqr.io/image/${bank}-${account}-compact2.png?amount=${amount}&addInfo=${content}&accountName=${name}`;
+document.getElementById("qrImage").src=url;
+
+document.getElementById("transferInfo").innerHTML=
+`Số tiền: <span class="text-emerald-400 font-bold">${Number(amount).toLocaleString()}đ</span><br>
+Nội dung: <span class="text-blue-400">${content}</span>`;
+
+document.getElementById("qrBox").classList.remove("hidden");
+}
+
+const names = [
+"Nguyễn Văn An","Trần Minh Anh","Lê Hoàng Nam","Phạm Quỳnh Anh","Hoàng Gia Bảo",
+"Vũ Minh Tuấn","Đặng Thùy Linh","Bùi Đức Anh","Đỗ Khánh Vy","Hồ Thanh Tùng",
+"Ngô Hải Yến","Dương Quốc Huy","Lý Bảo Ngọc","Phan Trung Kiên","Trịnh Ngọc Mai",
+"Mai Anh Tuấn","Cao Minh Khang","Võ Thị Lan","Đinh Công Thành","Lương Gia Hân",
+"Tạ Hoàng Long","Nguyễn Phương Anh","Trần Đức Minh","Lê Thảo Nhi","Phạm Anh Khoa",
+"Hoàng Ngọc Trâm","Vũ Quang Huy","Đặng Gia Huy","Bùi Thanh Hà","Đỗ Minh Quân",
+"Hồ Bích Ngọc","Ngô Tuấn Anh","Dương Minh Châu","Lý Hoàng Phúc","Phan Thùy Dương",
+"Trịnh Quốc Bảo","Mai Nhật Huy","Cao Ngọc Anh","Võ Minh Tâm","Đinh Thảo Vy",
+"Lương Thanh Tùng","Tạ Bảo Trân","Nguyễn Hải Đăng","Trần Khánh Linh","Lê Gia Huy",
+"Phạm Minh Thư","Hoàng Tuấn Kiệt","Vũ Ngọc Hân","Đặng Minh Triết","Bùi Phương Thảo",
+"Đỗ Anh Thư","Hồ Gia Hưng","Ngô Minh Anh","Dương Quỳnh Trang","Lý Tuấn Khang",
+"Phan Ngọc Ánh","Trịnh Minh Hoàng","Mai Thanh Trúc","Cao Đức Phát","Võ Khánh Ngân",
+"Đinh Minh Tài","Lương Bảo Vy","Tạ Minh Nhật","Nguyễn Quang Vinh","Trần Ngọc Huyền",
+"Lê Minh Đức","Phạm Thùy Trang","Hoàng Đức Anh","Vũ Hoài Nam","Đặng Thanh Tâm",
+"Bùi Minh Khôi","Đỗ Ngọc Mai","Hồ Minh Tuấn","Ngô Bảo Anh","Dương Thanh Huyền",
+"Lý Minh Trí","Phan Hoàng Yến","Trịnh Đức Huy","Mai Quỳnh Anh","Cao Gia Bảo",
+"Võ Thanh Hằng","Đinh Hoàng Anh","Lương Minh Hiếu","Tạ Ngọc Diệp","Nguyễn Thanh Phong",
+"Trần Bảo Ngọc","Lê Anh Tuấn","Phạm Gia Linh","Hoàng Minh Châu","Vũ Đức Thịnh",
+"Đặng Khánh Ly","Bùi Nhật Minh","Đỗ Thanh Vy","Hồ Quốc Bảo","Ngô Minh Thảo",
+"Dương Hoàng Long"
+];
+const packages=["1 Tháng","3 Tháng","12 Tháng"];
+function popup(){
+let n=names[Math.floor(Math.random()*names.length)];
+let p=packages[Math.floor(Math.random()*packages.length)];
+let pop=document.getElementById("salePopup");
+document.getElementById("popupText").innerText=n+" vừa mua gói "+p;
+pop.classList.remove("hidden");
+setTimeout(()=>pop.classList.add("hidden"),4000);
+}
+setInterval(popup,8000);
+</script>
+<script>
+// ===== CHỐNG CHUỘT PHẢI =====
+document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+});
+
+// ===== CHỐNG PHÍM TẮT DEVTOOLS =====
+document.addEventListener("keydown", function(e){
+
+    // F12
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.key === "I") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && e.key === "J") {
+        e.preventDefault();
+    }
+
+    // Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+    }
+
+    // Ctrl+S (Save page)
+    if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+    }
+
+});
+}, 1000);
+</script>
+<!-- NÚT ZALO -->
+<a href="https://zalo.me/0567866683" target="_blank"
+class="fixed bottom-20 right-6 z-50">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+class="w-10 h-10 drop-shadow-2xl hover:scale-110 transition duration-300">
+
+</a>    
+</body>
+</html>
+
+
+
+
+
+
+
+
